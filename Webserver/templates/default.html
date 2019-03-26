@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        {%block head%}
+        <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+        <title>{%block title%}{%endblock%}</title>
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto" rel="stylesheet">
+        {%endblock%}
+    </head>
+
+    <body>
+        <div id="header">
+            {%block header%}
+            <a href="https://www.firstinspires.org/" target="_blank"><img src="{{url_for('static', filename='FIRST.svg')}}" alt="FIRST logo" class="logo" id="FIRST"></a>
+            <h1>Scouting</h1>
+            <a href="http://newmanrobotics.ca/" target="_blank"><img src="{{url_for('static', filename='4618.svg')}}" alt="4618 logo" class="logo" id="team4618"></a>
+            {%endblock%}
+        </div>
+        
+        <div id="content">{%block content %}{%endblock%}</div>
+    </body>
+</html>

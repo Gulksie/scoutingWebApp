@@ -1,0 +1,16 @@
+{%extends "default.html"%}
+{%block title%}Login{%endblock%}
+{%block content%}
+<form method="POST">
+    <label><b>Username</b></label>
+    <input type="text" placeholder="Username" name="usr" required>
+
+    <label><b>Password</b></label>
+    <input type="password" name="psw" required>
+
+    <button type="submit">Login</button>
+    {%if retry%}
+    <p id="invalidPass">Invalid username/password. Please try again.</p>
+    {%endif%}
+</form>
+{%endblock%}

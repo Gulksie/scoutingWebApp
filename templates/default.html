@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    {%block head%}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--Page is bigger than 900px, use full size css-->
+    <link rel="stylesheet" media="only screen and (min-width: 901px)"
+        href="{{url_for('static', filename='desktop.css')}}">
+
+    <!--Page is <= 900px, use mobile css-->
+    <link rel="stylesheet" media="only screen and (max-width: 900px)"
+        href="{{url_for('static', filename='mobile.css')}}">
+
+    <!--Fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto" rel="stylesheet">
+
+    <!--Icons-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!--Js-->
+    <script type="text/javascript" src="{{url_for('static', filename='main.js')}}"></script>
+
+    <title>{%block title%}{%endblock%}</title>
+    {%endblock%}
+</head>
+
+<body>
+    <div id="header">
+        {%block header%}
+        <div id="desktopHeaderWrapper">
+
+            <!--Our logos (FIRST and 4618) and title-->
+            <div id="title">
+                <a href="https://www.firstinspires.org/" target="_blank"><img
+                        src="{{url_for('static', filename='FIRST.svg')}}" alt="FIRST logo" class="logo" id="FIRST"></a>
+                <a href="/" id="titleText">Scouting</a>
+                <a href="http://newmanrobotics.ca/" target="_blank"><img
+                        src="{{url_for('static', filename='4618.svg')}}" alt="4618 logo" class="logo" id="team4618"></a>
+            </div>
+
+            <!--Navigation bar, with all the different features (desktop)-->
+            <ul id="navBar">
+                <li><a href="{{url_for('home')}}">Home</a></li>
+                <li><a href="{{url_for('matchScoutingPage')}}">Scouting</a></li>
+                <li><a href="{{url_for('pitScoutingPage')}}">Pit Scouting</a></li>
+                <li><a href="{{url_for('pickListPage')}}">Picklist</a></li>
+                <li style="float:right">
+                    {%if request.cookies.get('loggedIn') == 'true'%}<a>Profile</a>
+                    {%else%}<a href="{{url_for('loginPage')}}">Login</a>
+                    {%endif%}
+                </li>
+            </ul>
+
+            <!--Hamburger menu on mobile-->
+            <a href="javascript:void(0);" class="icon" onclick="changeHamburger()" id="hamburger">
+                <i class="fa fa-bars"></i>
+            </a>
+        </div>
+
+        <!--Navigation bar (mobile)-->
+        <div id="navBarMobile">
+            <a href="{{url_for('home')}}">Home</a>
+            <a href="{{url_for('matchScoutingPage')}}">Scouting</a>
+            <a href="{{url_for('pitScoutingPage')}}">Pit Scouting</a>
+            <a href="{{url_for('pickListPage')}}">Picklist</a>
+            {%if request.cookies.get('loggedIn') == 'true'%}<a>Profile</a>
+            {%else%}<a href="{{url_for('loginPage')}}">Login</a>
+            {%endif%}
+        </div>
+        {%endblock%}
+    </div>
+    <div id="content">{%block content %}{%endblock%}
+    </div>
+</body>
+
+</html>

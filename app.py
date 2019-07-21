@@ -1,4 +1,5 @@
 from os import urandom
+from sys import argv
 from flask import Flask, render_template, make_response, request, url_for, redirect
 import flask_login
 
@@ -66,4 +67,4 @@ def pickListPage():
 
 
 if __name__ == "__main__":
-    serve(web)
+    serve(web, port=int(argv[1])if len(argv) > 1 else 8000)

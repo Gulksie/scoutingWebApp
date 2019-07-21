@@ -2,6 +2,8 @@ from os import urandom
 from flask import Flask, render_template, make_response, request, url_for, redirect
 import flask_login
 
+from waitress import serve
+
 from Classes.Block import *
 
 # static vars
@@ -64,4 +66,4 @@ def pickListPage():
 
 
 if __name__ == "__main__":
-    web.run()
+    serve(web)

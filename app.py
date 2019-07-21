@@ -64,4 +64,4 @@ def pickListPage():
 
 
 if __name__ == "__main__":
-    web.run(port=80, debug=True)
+    web.run()

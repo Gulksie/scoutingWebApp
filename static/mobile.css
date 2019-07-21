@@ -1,56 +1,12 @@
 /*CSS STYLE FOR SCREENS <= 900PX LARGE*/
 
-body {
-    margin:0;
-    padding:0;
-    background-color: #212121;
-    color: #FFFFFF
-}
+/*
+HEADER
+*/
 
-/*header*/
 #desktopHeaderWrapper {
-    background-color: #c81e1e;
-    margin: 0;
     padding-bottom: 5px;
     display:flex;
-    align-items: center;
-    overflow: hidden;
-}
-
-/*titles*/
-#title {
-    font-family: 'Roboto', sans-serif;
-    overflow: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex:1;
-}
-#title a {
-    text-decoration: none;
-}
-
-#titleText{
-    color: black;
-    padding: 0;
-    margin: 0;
-    font-size:20px;
-}
-
-.logo {
-    height: 3em;
-    padding-top: 0;
-    padding-bottom: 0;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-}
-
-#FIRST {
-    float: left;
-}
-
-#team4618 {
-    float: right;
 }
 
 /*nav bar*/

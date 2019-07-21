@@ -5,6 +5,10 @@
 <head>
     {%block head%}
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--css for all screen sizes-->
+    <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
+
     <!--Page is bigger than 900px, use full size css-->
     <link rel="stylesheet" media="only screen and (min-width: 901px)"
         href="{{url_for('static', filename='desktop.css')}}">

@@ -2,6 +2,8 @@ from os import urandom
 from flask import Flask, render_template, make_response, request, url_for, redirect
 import flask_login
 
+from Classes.Block import *
+
 # static vars
 
 # app and login
@@ -46,7 +48,9 @@ def login():
 
 @web.route('/scouting/')
 def matchScoutingPage():
-    return render_template('matchScouting.html')
+    return render_template('matchScouting.html', template=[StringBlock('str01', 'This is an example of a string input',
+                                                                       'Sample Text'), IntBlock('int01', 'This is an example of a int input', default=1234, max=9999), TallyIntBlock('tally01',
+                                                                                                                                                                                     'This is and example of a tally interger box', default=13)])
 
 
 @web.route('/pit/')
@@ -60,4 +64,4 @@ def pickListPage():
 
 
 if __name__ == "__main__":
-    web.run(port=80, host="0.0.0.0", debug=True)
+    web.run(port=80, debug=True)

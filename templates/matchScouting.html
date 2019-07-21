@@ -1,5 +1,83 @@
 {%extends "default.html"%}
+{%block head%}
+{{super()}}
+
+<style>
+    /*
+    BLOCKS
+    */
+    #blocks {
+        margin-top: 20px;
+    }
+
+    .block {
+        margin: 5px;
+        padding: 3px;
+        border: 1px solid black;
+        display: flex;
+        flex-direction: column;
+        border-radius: 1em;
+    }
+
+    .block input {
+        border-radius: 5px;
+    }
+
+    .blockElement {
+        margin: auto;
+        padding: 5px;
+    }
+
+    .string input {
+        margin-left: 1em;
+        margin-right: 1em;
+    }
+
+    .int input {
+        margin-left: 1em;
+        margin-right: 1em;
+    }
+
+    .tallyInt div {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .tallyInt .tallyBox {
+        border: 1px solid black;
+        padding: 0.5em;
+        margin: 0.5em;
+        color: initial;
+        background: #FFFFFF;
+    }
+</style>
+
+<script>
+    //used for tallys when scouting
+    function tallydown(id) {
+        var tally = parseInt(document.getElementById(id).value);
+        tally--;
+
+        document.getElementById(id).value = tally;
+    }
+
+    function tallyup(id) {
+        var tally = parseInt(document.getElementById(id).value);
+        tally++;
+
+        document.getElementById(id).value = tally;
+    }
+</script>
+{%endblock%}
+
 {%block title%}Scouting{%endblock%}
 {%block content%}
-Normal Scouting
+<div id="blocks">
+    {# Template should be an array of template objects #}
+    {%for i in template%}
+    <div class="block {{i.type}}">{{i.content|safe}}</div>
+    {%endfor%}
+</div>
 {%endblock%}

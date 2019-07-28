@@ -70,5 +70,5 @@ def pickListPage():
 
 
 if __name__ == "__main__":
-    #serve(web, port=int(argv[1])if len(argv) > 1 else 8000)
-    web.run()
+    serve(web, port=int(argv[1])if len(argv) > 1 else 8000)
+    # app.run()

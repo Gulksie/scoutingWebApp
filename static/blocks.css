@@ -1,0 +1,60 @@
+/*
+BLOCKS
+    */
+
+#blocks {
+	margin-top: 20px;
+	font-family: 'Lato', 'Open Sans', sans-serif;
+}
+
+.block {
+	margin: 5px;
+	padding: 3px;
+	border: 1px solid black;
+	display: flex;
+	flex-direction: column;
+	border-radius: 1em;
+}
+
+.block input {
+	border-radius: 0.5em;
+}
+
+.blockElement {
+	margin: auto;
+	padding: 5px;
+}
+
+.string input {
+	margin-left: 1em;
+	margin-right: 1em;
+}
+
+.int input {
+	margin-left: 1em;
+	margin-right: 1em;
+}
+
+.tallyInt div {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.tallyInt .tallyBox {
+	border: 1px solid black;
+	padding: 0.5em;
+	margin: 0.5em;
+	color: initial;
+	background: #FFFFFF;
+}
+
+.tallyInt button {
+	border-radius: 0.25em
+}
+
+.checkBox input{
+	width: 1.5em;
+	height: 1.5em;
+}

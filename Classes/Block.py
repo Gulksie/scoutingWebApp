@@ -35,10 +35,18 @@ class IntBlock(Block):
 
 
 class TallyIntBlock(Block):
-    "Question box that returns an integer, taken from a tally with plus and minus signs."
+    "Question block that returns an integer, taken from a tally with plus and minus signs."
 
     def __init__(self, id_, question, default=0, min=0, max=100):
         super().__init__(id_, question, "tallyInt")
 
         self.content = render_template(
             "Blocks/tallyInt.html", question=question, id=id_, default=default)
+
+class CheckBoxBlock(Block):
+    "Question block that returns a boolean, taken from a checkbox"
+
+    def __init__(self, id_, question):
+        super().__init__(id, question, "checkBox")
+
+        self.content = render_template("Blocks/checkBox.html", question=question)

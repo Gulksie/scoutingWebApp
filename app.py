@@ -56,7 +56,7 @@ def matchScoutingPage():
                                                                'int01', 'This is an example of a int input', default=1234, max=9999),
                                                            TallyIntBlock(
         'tally01', 'This is an example of a tally interger box', default=13),
-        CheckBoxBlock('tally01', 'This is an example of a check box')])
+        CheckBoxBlock('chck01', 'This is an example of a check box'), RadioButtonBlock('rdo01', "This is an example of a radio button input", 'Choice1', "Choice2", "Choice3")])
 
 
 @web.route('/pit/')
@@ -70,5 +70,5 @@ def pickListPage():
 
 
 if __name__ == "__main__":
-    serve(web, port=int(argv[1])if len(argv) > 1 else 8000)
-    # app.run()
+    serve(web, port=int(argv[1])if len(argv) > 1 else 5000)
+    #web.run(debug=True)

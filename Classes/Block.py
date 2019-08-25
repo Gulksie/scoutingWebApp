@@ -50,3 +50,11 @@ class CheckBoxBlock(Block):
         super().__init__(id, question, "checkBox")
 
         self.content = render_template("Blocks/checkBox.html", question=question)
+
+class RadioButtonBlock(Block):
+    "Radio button that returns the property that was clicked"
+
+    def __init__(self, id_, question, *choices):
+        super().__init__(id_, question, "radioButton")
+
+        self.content = render_template("Blocks/radioButton.html", question=question, id=id_, args=choices)

@@ -1,0 +1,6 @@
+<p class="blockElement">{{question}}</p>
+{%for i in args%}
+<div class="radioContainer blockElement">
+    <input class="blockElement" type="radio" name="{{id}}" value="{{i}}">{{i}}
+</div>
+{%endfor%}

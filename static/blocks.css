@@ -58,3 +58,11 @@ BLOCKS
 	width: 1.5em;
 	height: 1.5em;
 }
+
+.radioContainer {
+	margin:auto;
+}
+
+.radioContainer #text {
+	font-family: 'Lato', 'Open Sans', sans-serif;
+}

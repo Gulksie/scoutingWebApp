@@ -66,3 +66,16 @@ BLOCKS
 .radioContainer #text {
 	font-family: 'Lato', 'Open Sans', sans-serif;
 }
+
+.block.header, .block.space{
+	border:none;
+}
+
+.block.header {
+	margin-bottom: 3em;
+}
+
+.block.header h1 {
+	margin: auto;
+	font-family: 'Roboto', sans-serif;
+}

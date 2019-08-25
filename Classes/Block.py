@@ -43,18 +43,44 @@ class TallyIntBlock(Block):
         self.content = render_template(
             "Blocks/tallyInt.html", question=question, id=id_, default=default)
 
+
 class CheckBoxBlock(Block):
     "Question block that returns a boolean, taken from a checkbox"
 
     def __init__(self, id_, question):
         super().__init__(id, question, "checkBox")
 
-        self.content = render_template("Blocks/checkBox.html", question=question)
+        self.content = render_template(
+            "Blocks/checkBox.html", question=question)
+
 
 class RadioButtonBlock(Block):
-    "Radio button that returns the property that was clicked"
+    "Radio button block that returns the property that was clicked"
 
     def __init__(self, id_, question, *choices):
         super().__init__(id_, question, "radioButton")
 
-        self.content = render_template("Blocks/radioButton.html", question=question, id=id_, args=choices)
+        self.content = render_template(
+            "Blocks/radioButton.html", question=question, id=id_, args=choices)
+
+
+class HeaderBlock(Block):
+    "Header block to act as a (section) title"
+
+    def __init__(self, title):
+        super().__init__(-1, None, "header")
+
+        self.title = title
+
+        self.content = render_template("Blocks/header.html", content=title)
+
+
+class SpaceBlock(Block):
+    "Space block to add space(measured in px) between sections"
+
+    def __init__(self, size):
+        super().__init__(-1, None, "space")
+
+        self.size = size
+
+        self.content = f'<div style="height:{size}px"></div>'

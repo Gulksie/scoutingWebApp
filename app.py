@@ -51,11 +51,11 @@ def login():
 
 @web.route('/scouting/')
 def matchScoutingPage():
-    return render_template('matchScouting.html', template=[StringBlock('str01', 'This is an example of a string input', 'Sample Text'),
+    return render_template('matchScouting.html', template=[HeaderBlock("This is an example of a header"), StringBlock('str01', 'This is an example of a string input', 'Sample Text'),
                                                            IntBlock(
-                                                               'int01', 'This is an example of a int input', default=1234, max=9999),
+                                                               'int01', 'This is an example of a int input', default=1234, max=9999), SpaceBlock(50),
                                                            TallyIntBlock(
-        'tally01', 'This is an example of a tally interger box', default=13),
+        'tally01', 'Above is a space, this is an example of a tally interger box', default=13),
         CheckBoxBlock('chck01', 'This is an example of a check box'), RadioButtonBlock('rdo01', "This is an example of a radio button input", 'Choice1', "Choice2", "Choice3")])
 
 
@@ -71,4 +71,4 @@ def pickListPage():
 
 if __name__ == "__main__":
     serve(web, port=int(argv[1])if len(argv) > 1 else 5000)
-    #web.run(debug=True)
+    # web.run(debug=True)

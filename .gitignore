@@ -317,3 +317,4 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/flask,python,pycharm,windows,virtualenv,visualstudiocode
+users.p

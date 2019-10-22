@@ -51,7 +51,7 @@
                 <li><a href="{{url_for('pitScoutingPage')}}">Pit Scouting</a></li>
                 <li><a href="{{url_for('pickListPage')}}">Picklist</a></li>
                 <li style="float:right">
-                    {%if request.cookies.get('loggedIn') == 'true'%}<a>Profile</a>
+                    {%if current_user.is_authenticated%}<a>Profile</a>
                     {%else%}<a href="{{url_for('loginPage')}}">Login</a>
                     {%endif%}
                 </li>

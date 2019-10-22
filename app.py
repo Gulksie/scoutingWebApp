@@ -1,19 +1,33 @@
-from os import urandom
+from os import urandom, environ
 from sys import argv
-from flask import Flask, render_template, make_response, request, url_for, redirect
+
+from flask import Flask, render_template, make_response, request, url_for, redirect, abort
 import flask_login
 
 from waitress import serve
 
 from Classes.Block import *
+from Classes.User import User, getUser, getGUser, addUser, loadUsers, saveUsers
 
 # static vars
 
 # app and login
 web = Flask(__name__)
 web.secret_key = urandom(16)
-# loginManager = flask_login.LoginManager()
-# loginManager.init_app(web)
+print('SECRET KEY:' + str(web.secret_key))
+
+googleID = environ.get("GCID")  # THIS SHOULD BE AN ENVIORMENT VARIBLE
+
+if googleID == None:
+    raise Exception("No google ID provided.")
+
+loginManager = flask_login.LoginManager()
+loginManager.init_app(web)
+
+
+@loginManager.user_loader
+def loadUser(id):
+    return getUser(id)
 
 
 @web.route('/')
@@ -27,15 +41,45 @@ def home():
 # https://flask-login.readthedocs.io/en/latest/#how-it-works
 @web.route('/login', methods=['GET', 'POST'])
 def loginPage():
+    if flask_login.current_user.is_authenticated:
+        return abort(403)
+
     if request.method == 'POST':
+        try:
+            if request.headers['Login-Type'] == "google-signin":
+                return googleLogin()
+        except KeyError:
+            pass
         return login()
 
-    return render_template("login.html", retry=False)
+    elif request.headers.get("Login-Type") == "LOGOUT":
+        flask_login.logout_user()
+        return redirect(url_for('home'))
+
+    return render_template("login.html", retry=False, googleID=googleID)
+
+
+def googleLogin():
+    json = request.get_json()
+
+    user = getGUser(json['ID'])
+
+    if user == None:
+        user = User(json['name'], json['email'], json['ID'])
+
+    addUser(user)
+
+    flask_login.login_user(user)
+
+    saveUsers()
+
+    return redirect(url_for('home'))
 
 
 def login():
-    usr = request.form['usr']
-    psw = request.form['psw']
+
+    usr = request.form.get('usr')
+    psw = request.form.get('psw')
 
     # TODO: not this...anything but this
     # this login is the equivalent of not having one at all
@@ -46,7 +90,7 @@ def login():
         return resp
 
     else:
-        return render_template('login.html', retry=True)
+        return render_template('login.html', retry=True, googleID=googleID)
 
 
 @web.route('/scouting/')
@@ -70,5 +114,6 @@ def pickListPage():
 
 
 if __name__ == "__main__":
-    serve(web, port=int(argv[1])if len(argv) > 1 else 5000)
-    # web.run(debug=True)
+    loadUsers()
+    #serve(web, port=int(argv[1])if len(argv) > 1 else 5000)
+    web.run(debug=True)

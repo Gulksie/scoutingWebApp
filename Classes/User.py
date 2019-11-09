@@ -38,8 +38,17 @@ users = []
 
 def loadUsers():
     global users
-    with open('users.p', 'rb+') as f:
-        users = pickle.load(f)
+    try:
+        with open('users.p', 'rb+') as f:
+            users = pickle.load(f)
+    except FileNotFoundError:
+        # create the empty file and set users to blank array
+
+        f = open('users.p', 'w+')
+        f.close()
+        users = []
+    except EOFError:
+        users = []
 
 
 def saveUsers():
@@ -57,6 +66,13 @@ class User(UserMixin):
     email = ""
     id = '0x0'
     gID = None
+
+    # account level can be 0 or 1
+    # level 0 is a standard user account, with acess to view team picklists but not edit
+    # level 1 is a team admin level account, that can edit picklists anf stuff on teams
+    accountLevel = 0
+
+    team = 0
 
     def __init__(self, name, email, gID=None):
         self.name = name

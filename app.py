@@ -6,6 +6,9 @@ import flask_login
 
 from waitress import serve
 
+from google.oauth2 import id_token
+from google.auth.transport import requests
+
 from Classes.Block import *
 from Classes.User import User, getUser, getGUser, addUser, loadUsers, saveUsers
 
@@ -17,6 +20,7 @@ web.secret_key = urandom(16)
 print('SECRET KEY:' + str(web.secret_key))
 
 googleID = environ.get("GCID")  # THIS SHOULD BE AN ENVIORMENT VARIBLE
+googleID += '.apps.googleusercontent.com'
 
 if googleID == None:
     raise Exception("No google ID provided.")
@@ -36,14 +40,8 @@ def home():
     return render_template('home.html')
 
 
-# setup login
-# TODO: USER AUTHENICATION, STORAGE, LIKE THE WHOLE LOGIN THING LOL
-# https://flask-login.readthedocs.io/en/latest/#how-it-works
 @web.route('/login', methods=['GET', 'POST'])
 def loginPage():
-    if flask_login.current_user.is_authenticated:
-        return abort(403)
-
     if request.method == 'POST':
         try:
             if request.headers['Login-Type'] == "google-signin":
@@ -53,7 +51,11 @@ def loginPage():
         return login()
 
     elif request.headers.get("Login-Type") == "LOGOUT":
+        print('logout')
         flask_login.logout_user()
+        return redirect(url_for('home'))
+
+    elif flask_login.current_user.is_authenticated:
         return redirect(url_for('home'))
 
     return render_template("login.html", retry=False, googleID=googleID)
@@ -62,10 +64,20 @@ def loginPage():
 def googleLogin():
     json = request.get_json()
 
-    user = getGUser(json['ID'])
+    # this is ripped directly from google lol
+    idinfo = id_token.verify_oauth2_token(
+        json['ID'], requests.Request(), googleID)
+
+    if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+        # not a valid issuer, murder them
+        return render_template("login.html", retry=True, googleID=googleID)
+
+    id_ = idinfo['sub']
+
+    user = getGUser(id_)
 
     if user == None:
-        user = User(json['name'], json['email'], json['ID'])
+        user = User(json['name'], json['email'], id_)
 
     addUser(user)
 
@@ -83,14 +95,22 @@ def login():
 
     # TODO: not this...anything but this
     # this login is the equivalent of not having one at all
-    if usr == "gulk" and psw == "geist":
+    # SO because this would be massive security thingy we're just gonna disable this for now :)
+    '''if usr == "gulk" and psw == "geist":
         resp = redirect(url_for('home'))
         resp.set_cookie('loggedIn', "true")
         resp.set_cookie('usr', usr)
         return resp
 
     else:
-        return render_template('login.html', retry=True, googleID=googleID)
+        return render_template('login.html', retry=True, googleID=googleID)'''
+    return render_template('login.html', retry=True, googleID=googleID)
+
+
+@web.route('/profile/')
+@flask_login.login_required
+def profilePage():
+    return render_template('profile.html', googleID=googleID)
 
 
 @web.route('/scouting/')

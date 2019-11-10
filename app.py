@@ -54,7 +54,7 @@ def loginPage():
 
     elif request.headers.get("Login-Type") == "LOGOUT":
         flask_login.logout_user()
-        return redirect(url_for('home', _external=True))
+        return redirect(url_for('home', _external=True, _scheme="https"))
 
     elif flask_login.current_user.is_authenticated:
         return redirect(url_for('home'))

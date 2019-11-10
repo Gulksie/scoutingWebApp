@@ -22,10 +22,12 @@ web.secret_key = urandom(16)
 print('SECRET KEY:' + str(web.secret_key))
 
 googleID = environ.get("GCID")  # THIS SHOULD BE AN ENVIORMENT VARIBLE
-googleID += '.apps.googleusercontent.com'
 
 if googleID == None:
     raise Exception("No google ID provided.")
+
+googleID += '.apps.googleusercontent.com'
+
 
 loginManager = flask_login.LoginManager()
 loginManager.init_app(web)
@@ -57,7 +59,7 @@ def loginPage():
         return redirect(url_for('home', _external=True, _scheme="https"))
 
     elif flask_login.current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('home', _external=True, _scheme="https"))
 
     return render_template("login.html", retry=False, googleID=googleID)
 
@@ -86,7 +88,7 @@ def googleLogin():
 
     saveUsers()
 
-    return redirect(url_for('home'))
+    return redirect(url_for('home', _external=True, _scheme="https"))
 
 
 def login():
@@ -136,7 +138,7 @@ def matchScoutingPage():
 @flask_login.login_required
 def submitScouting():
     ScoutingWorker.saveData(4618, request.get_json())
-    return redirect(url_for('matchScoutingPage'))
+    return redirect(url_for('matchScoutingPage'), _external=True, _scheme="https")
 
 
 @web.route('/pit/')

@@ -138,7 +138,7 @@ def matchScoutingPage():
 @flask_login.login_required
 def submitScouting():
     ScoutingWorker.saveData(4618, request.get_json())
-    return redirect(url_for('matchScoutingPage'), _external=True, _scheme="https")
+    return redirect(url_for('matchScoutingPage', _external=True, _scheme="https"))
 
 
 @web.route('/pit/')

@@ -12,6 +12,8 @@ from google.auth.transport import requests
 from Classes.Block import *
 from Classes.User import User, getUser, getGUser, addUser, loadUsers, saveUsers
 
+import ScoutingWorker
+
 # static vars
 
 # app and login
@@ -51,7 +53,6 @@ def loginPage():
         return login()
 
     elif request.headers.get("Login-Type") == "LOGOUT":
-        print('logout')
         flask_login.logout_user()
         return redirect(url_for('home'))
 
@@ -114,13 +115,28 @@ def profilePage():
 
 
 @web.route('/scouting/')
+@flask_login.login_required
 def matchScoutingPage():
-    return render_template('matchScouting.html', template=[HeaderBlock("This is an example of a header"), StringBlock('str01', 'This is an example of a string input', 'Sample Text'),
+    '''return render_template('matchScouting.html', template=[HeaderBlock("This is an example of a header"), StringBlock('str01', 'This is an example of a string input', 'Sample Text'),
                                                            IntBlock(
                                                                'int01', 'This is an example of a int input', default=1234, max=9999), SpaceBlock(50),
                                                            TallyIntBlock(
         'tally01', 'Above is a space, this is an example of a tally interger box', default=13),
-        CheckBoxBlock('chck01', 'This is an example of a check box'), RadioButtonBlock('rdo01', "This is an example of a radio button input", 'Choice1', "Choice2", "Choice3")])
+        CheckBoxBlock('chck01', 'This is an example of a check box'), RadioButtonBlock('rdo01', "This is an example of a radio button input", 'Choice1', "Choice2", "Choice3")])'''
+    # RIP "bottom text"
+
+    # not too sure why but vscode loves to eat my formatting so thats fun
+    template = [HeaderBlock("Robot info"), IntBlock('robot', "Robot #", default=254), IntBlock('match', "Match number"), HeaderBlock("Standstorm"), RadioButtonBlock('startingSide', 'What platform did the robot start on?', '3', '2', '1'), TallyIntBlock('autoPanels', 'How many hatch panels did the robot place? (Auto)'), TallyIntBlock("autoCargo", "How much cargo did the robot place? (Auto)"), TallyIntBlock("autoRocketPanels", "How many panels did the robot put in the rocket? (Auto)"), TallyIntBlock("autoRocketCargo", "How much cargo did the robot put in the rocket? (Auto)"), SpaceBlock(40), HeaderBlock("Teleop"), TallyIntBlock("teleopPanels", "How many hatch panels did the robot place?"), TallyIntBlock("teleopCargo", "How much cargo did the robot place?"), TallyIntBlock("teleopRocketPanels", "How many panels did the robot put in the rocket?"), TallyIntBlock("teleopRocketCargo", "How much cargo did the robot put in the rocket?"), TallyIntBlock("droppedPanels", "How many panels did the robot drop?"), TallyIntBlock(
+        "droppedCargo", "How much cargo did the robot drop?"), CheckBoxBlock("playedDefense", "Robot played defense"), CheckBoxBlock("attemptedClimb", "Robot attempted to climb"), CheckBoxBlock("helpedClimb", "Robot helped another robot climb"), CheckBoxBlock("climbed", "Robot successfully climbed (Second or third level)"), RadioButtonBlock("climbLevel", "What platform did the robot climb to?", 0, 1, 2, 3), CheckBoxBlock("brokeDown", "Robot tipped, broke down or lost COMMS"), IntBlock("ratePannels", "What would you rate the robot's ability to score hatch panels?(/10)", max=10), IntBlock("rateCargo", "What would you rate the robot's ability to score cargo?(/10)", max=10), IntBlock("rateRocketPanels", "What would you rate the robot's ability to score panels on rockets?(/10)", max=10), IntBlock("rateRocketCargo", "What would you rate the robot's ability to score cargo on rockets?(/10)", max=10), IntBlock("rateBot", "What would you rate the robot overall?(/10)", max=10), StringBlock("comments", "Comments")]
+
+    return render_template('matchScouting.html', template=template)
+
+
+@web.route('/scouting/submit', methods=['POST'])
+@flask_login.login_required
+def submitScouting():
+    ScoutingWorker.saveData(4618, request.get_json())
+    return redirect(url_for('matchScoutingPage'))
 
 
 @web.route('/pit/')
@@ -135,5 +151,5 @@ def pickListPage():
 
 if __name__ == "__main__":
     loadUsers()
-    #serve(web, port=int(argv[1])if len(argv) > 1 else 5000)
-    web.run(debug=True)
+    serve(web, port=int(argv[1])if len(argv) > 1 else 5000)
+    # web.run(debug=True)

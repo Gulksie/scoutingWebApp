@@ -79,3 +79,9 @@ BLOCKS
 	margin: auto;
 	font-family: 'Roboto', sans-serif;
 }
+
+#submitButton {
+	border-radius: 0.25em;
+	width: 100%;
+	margin-top: 10px;
+}

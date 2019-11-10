@@ -21,7 +21,7 @@ class StringBlock(Block):
         super().__init__(id_, question, "string")
 
         self.content = render_template(
-            "Blocks/string.html", question=question, default=default)
+            "Blocks/string.html", question=question, default=default, name=id_)
 
 
 class IntBlock(Block):
@@ -31,7 +31,7 @@ class IntBlock(Block):
         super().__init__(id_, question, "int")
 
         self.content = render_template("Blocks/int.html", question=question,
-                                       default=default, min=min, max=max)
+                                       default=default, min=min, max=max, name=id_)
 
 
 class TallyIntBlock(Block):
@@ -41,7 +41,7 @@ class TallyIntBlock(Block):
         super().__init__(id_, question, "tallyInt")
 
         self.content = render_template(
-            "Blocks/tallyInt.html", question=question, id=id_, default=default)
+            "Blocks/tallyInt.html", question=question, id=id_, default=default, name=id_)
 
 
 class CheckBoxBlock(Block):
@@ -51,7 +51,7 @@ class CheckBoxBlock(Block):
         super().__init__(id, question, "checkBox")
 
         self.content = render_template(
-            "Blocks/checkBox.html", question=question)
+            "Blocks/checkBox.html", question=question, name=id_)
 
 
 class RadioButtonBlock(Block):
@@ -61,7 +61,7 @@ class RadioButtonBlock(Block):
         super().__init__(id_, question, "radioButton")
 
         self.content = render_template(
-            "Blocks/radioButton.html", question=question, id=id_, args=choices)
+            "Blocks/radioButton.html", question=question, id=id_, args=choices, name=id_)
 
 
 class HeaderBlock(Block):

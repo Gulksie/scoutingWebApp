@@ -19,15 +19,71 @@
 
         document.getElementById(id).value = tally;
     }
+
+    function submitForm() {
+        //loop through children of div "blocks", take the values of each of the inputs
+        values = getInputs(document.getElementById("blocks"))
+
+        if (values == null) {
+            return
+        }
+
+        var xrequest = new XMLHttpRequest()
+        xrequest.open("POST", "{{ url_for('submitScouting') }}")
+        xrequest.setRequestHeader("Content-Type", "application/json")
+        xrequest.onload = function () {
+            window.open(xrequest.responseURL, "_self")
+        }
+        xrequest.send(JSON.stringify(values))
+    }
+
+    function getInputs(element) {
+        //recursivley looks in children for inputs and adds them to a dict
+        var values = {}
+        for (var i = 0; i < element.children.length; i++) {
+            var v = getInputs(element.children[i])
+            if (v === null) {
+                return null
+            }
+
+            values = Object.assign({}, values, v)
+        }
+
+        if (element.nodeName === "INPUT") {
+            if (!element.checkValidity()) {
+                alert("Invalid input!")
+                return null
+            }
+
+            switch (element.type) {
+                case "number":
+                    values[element.name] = parseFloat(element.value)
+                    break;
+
+                case "checkbox":
+                    values[element.name] = element.checked
+                    break;
+
+                default:
+                    values[element.name] = element.value
+            }
+        }
+
+        return values
+    }
 </script>
 {%endblock%}
 
 {%block title%}Scouting{%endblock%}
 {%block content%}
-<div id="blocks">
-    {# Template should be an array of template objects #}
-    {%for i in template%}
-    <div class="block {{i.type}}">{{i.content|safe}}</div>
-    {%endfor%}
-</div>
+<form action="{{url_for('submitScouting')}}" method="POST" id="mainForm">
+    <div id="blocks">
+        {# Template should be an array of template objects #}
+        {%for i in template%}
+        <div class="block {{i.type}}">{{i.content|safe}}</div>
+        {%endfor%}
+    </div>
+</form>
+
+<button id="submitButton" onclick="submitForm();">Submit</button>
 {%endblock%}

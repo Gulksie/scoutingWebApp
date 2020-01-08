@@ -11,6 +11,10 @@ body {
 HEADER
 */
 
+#header {
+    margin-bottom: 0.5em;
+}
+
 #desktopHeaderWrapper {
     background-color: #c81e1e;
     margin: 0;
@@ -50,5 +54,16 @@ HEADER
 }
 
 #team4618 {
+    float: right;
+}
+
+#hamburger div {
+    width: 1em;
+    height: 0.15em;
+    background-color: black;
+    margin: 0.16em 0;
+}
+
+#profileLink {
     float: right;
 }

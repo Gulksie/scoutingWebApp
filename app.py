@@ -1,8 +1,9 @@
 from os import urandom, environ
 from sys import argv
 
-from flask import Flask, render_template, make_response, request, url_for, redirect, abort
+from flask import Flask, render_template, make_response, request, url_for, redirect, abort, request
 import flask_login
+from flask_talisman import Talisman, GOOGLE_CSP_POLICY
 
 from waitress import serve
 
@@ -10,7 +11,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 
 from Classes.Block import *
-from Classes.User import User, getUser, getGUser, addUser, loadUsers, saveUsers
+from Classes.User import *
 
 import ScoutingWorker
 
@@ -31,11 +32,25 @@ googleID += '.apps.googleusercontent.com'
 
 loginManager = flask_login.LoginManager()
 loginManager.init_app(web)
+loginManager.login_view = 'loginPage'
+
+# forces https
+#Talisman(web, content_security_policy=GOOGLE_CSP_POLICY)
 
 
 @loginManager.user_loader
 def loadUser(id):
     return getUser(id)
+
+
+@web.before_request
+def beforeRequest():
+    user = flask_login.current_user
+
+    # all users without a team should be redirected to init page
+    # allows requests to the init page and js, css through
+    if user.is_authenticated and not user.hasInit and request.endpoint not in ['initAccount', 'initTeamCheck', 'logout'] and request.path[:8] != u'/static/':
+        return redirect(url_for('initAccount'))
 
 
 @web.route('/')
@@ -52,16 +67,22 @@ def loginPage():
                 return googleLogin()
         except KeyError:
             pass
-        return login()
 
+    # this isn't used, should probably delete
     elif request.headers.get("Login-Type") == "LOGOUT":
         flask_login.logout_user()
-        return redirect(url_for('home', _external=True, _scheme="https"))
+        return redirect(url_for('home'))
 
     elif flask_login.current_user.is_authenticated:
-        return redirect(url_for('home', _external=True, _scheme="https"))
+        return redirect(url_for('home'))
 
     return render_template("login.html", retry=False, googleID=googleID)
+
+
+@web.route('/logout')
+def logout():  # logs out and redirects to home
+    flask_login.logout_user()
+    return redirect(url_for('home'))
 
 
 def googleLogin():
@@ -88,16 +109,19 @@ def googleLogin():
 
     saveUsers()
 
-    return redirect(url_for('home', _external=True, _scheme="https"))
+    if user.hasInit:  # account has been inintalized, it has a team number and account level asociated
+        return redirect(url_for('home'))
+
+    else:
+        return redirect(url_for('initAccount', ))
 
 
+# not used anywhere, should remove
 def login():
 
     usr = request.form.get('usr')
     psw = request.form.get('psw')
 
-    # TODO: not this...anything but this
-    # this login is the equivalent of not having one at all
     # SO because this would be massive security thingy we're just gonna disable this for now :)
     '''if usr == "gulk" and psw == "geist":
         resp = redirect(url_for('home'))
@@ -113,7 +137,41 @@ def login():
 @web.route('/profile/')
 @flask_login.login_required
 def profilePage():
-    return render_template('profile.html', googleID=googleID)
+    if flask_login.current_user.hasInit:
+        return render_template('profile.html', googleID=googleID, user=flask_login.current_user)
+    else:
+        return redirect(url_for('initAccount'))
+
+
+@web.route('/profile/init/')
+@flask_login.login_required
+def initAccount():  # should only be run by users after creating their account
+    user = flask_login.current_user
+    if user.hasInit:
+        return redirect(url_for('profilePage'))
+
+    # check if url is a GET with a team number attatched
+    team = request.args.get('team', default=None, type=int)
+
+    if team is None:  # doesn't have useful params, give the defualt page
+        return render_template('initAccount.html', googleID=googleID)
+
+    else:  # set user account to team #
+        user.initUser(team)
+        return redirect(url_for('home'))
+
+
+@web.route('/profile/init/team')
+@flask_login.login_required
+def initTeamCheck():  # sent by js when user types in a team, checks if the team exists
+    team = request.args.get('team', default=None, type=int)
+
+    if team is None:
+        return "No team provided"
+
+    else:
+        # True if team exists, False otherwise
+        return str(getTeamByNumber(team) is not None)
 
 
 @web.route('/scouting/')
@@ -138,7 +196,7 @@ def matchScoutingPage():
 @flask_login.login_required
 def submitScouting():
     ScoutingWorker.saveData(4618, request.get_json())
-    return redirect(url_for('matchScoutingPage', _external=True, _scheme="https"))
+    return redirect(url_for('matchScoutingPage'))
 
 
 @web.route('/pit/')
@@ -153,5 +211,5 @@ def pickListPage():
 
 if __name__ == "__main__":
     loadUsers()
-    serve(web, port=int(argv[1])if len(argv) > 1 else 5000)
-    # web.run(debug=True)
+    # serve(web, port=int(argv[1])if len(argv) > 1 else 5000)
+    web.run(debug=True)

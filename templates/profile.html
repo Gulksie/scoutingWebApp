@@ -5,33 +5,18 @@
 {%block head%}
 {{super()}}
 <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
-<script>
-    function signOut() {
-        var auth2 = gapi.auth2.getAuthInstance();
-        auth2.signOut().then(function () {
-            console.log('User signed out.');
-        });
-
-        var xrequest = new XMLHttpRequest()
-        xrequest.open("GET", "{{ url_for('loginPage') }}")
-        xrequest.setRequestHeader("Login-Type", "LOGOUT")
-        xrequest.onload = function () {
-            window.open(xrequest.responseURL, "_self")
-        }
-        xrequest.send()
-    }
-
-    function onLoad() {
-        gapi.load('auth2', function () {
-            gapi.auth2.init();
-        });
-    }
-</script>
 
 <meta name="google-signin-client_id" content="{{googleID}}">
 
 {%endblock%}
 
 {%block content%}
-<a href="javascript:signOut();">Sign out</a>
+<div id="details">
+    <h3>Team: <b>{{user.team.number}}</b></h3>
+    <!--Probably shouldn't be public facing but ¯\_(ツ)_/¯-->
+    <h3>User id: <b>{{user.id}}</b></h3>
+    <h3>Account level: <b>{{user.accountLevel}}</b></h3>
+</div>
+
+<button onclick="signOut();">Sign out</button>
 {%endblock%}

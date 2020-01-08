@@ -20,11 +20,11 @@
     <!--Fonts-->
     <link href="https://fonts.googleapis.com/css?family=Lato|Open+Sans|Roboto&display=swap" rel="stylesheet">
 
-    <!--Icons-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
     <!--Js-->
     <script type="text/javascript" src="{{url_for('static', filename='main.js')}}"></script>
+
+    <!--Icon-->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
     <title>{%block title%}{%endblock%}</title>
     {%endblock%}
@@ -50,7 +50,7 @@
                 <li><a href="{{url_for('matchScoutingPage')}}">Scouting</a></li>
                 <li><a href="{{url_for('pitScoutingPage')}}">Pit Scouting</a></li>
                 <li><a href="{{url_for('pickListPage')}}">Picklist</a></li>
-                <li style="float:right">
+                <li id="profileLink">
                     {%if current_user.is_authenticated%}<a href="{{url_for('profilePage')}}">Profile</a>
                     {%else%}<a href="{{url_for('loginPage')}}">Login</a>
                     {%endif%}
@@ -58,9 +58,14 @@
             </ul>
 
             <!--Hamburger menu on mobile-->
-            <a href="javascript:void(0);" class="icon" onclick="changeHamburger()" id="hamburger">
-                <i class="fa fa-bars"></i>
+            <!--<a href="javascript:void(0);" class="icon" onclick="changeHamburger()" id="hamburger">
+                <i class="fa fa-bars"></i>-->
             </a>
+            <div id="hamburger" onclick="changeHamburger()">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
         </div>
 
         <!--Navigation bar (mobile)-->

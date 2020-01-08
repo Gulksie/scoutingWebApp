@@ -1,0 +1,54 @@
+{%extends "default.html"%}
+{%block head%}
+{{super()}}
+<meta name="google-signin-client_id" content="{{googleID}}">
+<script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+
+<script>
+    function tryTeam() {
+        var team = document.getElementById("teamSelector").value
+
+        var req = new XMLHttpRequest();
+        req.open("GET", "{{url_for('initTeamCheck')}}?team=" + team, true)
+
+        req.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+
+                resp = this.responseText
+
+                p = document.getElementById("teamExists")
+                if (resp == "No team provided") {
+                    return
+                }
+
+                else if (resp == "True") {
+                    p.innerHTML = "This team already exists. If you select it, you will have to be accepted by a team admin (usually a mentor)"
+                } else if (resp == "False") {
+                    p.innerHTML = "This team doesn't exist. If you select it, you will be in charge of accepting new members onto the team."
+                } else { // corrupt probably
+                    p.innerHTML = "Something went wrong"
+                }
+            }
+        }
+
+        req.send()
+
+    }
+
+    function submitTeam() {
+        window.location.href = "{{url_for('initAccount')}}?team=" + document.getElementById("teamSelector").value
+    }
+</script>
+{%endblock%}
+{%block title%}Initialize Account{%endblock%}
+
+{%block content%}
+<h5>Enter your team number</h5>
+<input onchange="tryTeam()" type="int" id="teamSelector">
+
+<p id="teamExists"></p>
+
+<button onclick="submitTeam();">Go</button>
+
+<button onclick="signOut();">Sign out</button>
+{%endblock%}

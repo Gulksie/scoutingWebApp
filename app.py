@@ -34,8 +34,13 @@ loginManager = flask_login.LoginManager()
 loginManager.init_app(web)
 loginManager.login_view = 'loginPage'
 
-# forces https
-Talisman(web, content_security_policy=GOOGLE_CSP_POLICY)
+# construct csp
+# https://github.com/GoogleCloudPlatform/flask-talisman/blob/master/flask_talisman/talisman.py#LC31
+csp = GOOGLE_CSP_POLICY
+csp['font-src'] = '*'
+csp['script-src'] += ' apis.google.com'
+
+Talisman(web, content_security_policy=csp)
 
 
 @loginManager.user_loader
@@ -211,5 +216,5 @@ def pickListPage():
 
 if __name__ == "__main__":
     loadUsers()
-    serve(web, port=int(argv[1])if len(argv) > 1 else 5000)
+    serve(web, port=int(argv[1])if len(argv) > 1 else 8080, host="0.0.0.0")
     # web.run(debug=True)
